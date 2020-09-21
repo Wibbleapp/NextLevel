@@ -515,6 +515,12 @@ extension NextLevelSession {
         }
     }
     
+    public func resetAudioInput() {
+        self.executeClosureSyncOnSessionQueueIfNecessary {
+            self._audioInput = nil
+        }
+    }
+    
     private func startSessionIfNecessary(timestamp: CMTime) {
         if !self._startTimestamp.isValid {
             self._startTimestamp = timestamp

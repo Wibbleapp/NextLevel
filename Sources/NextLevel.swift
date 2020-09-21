@@ -278,7 +278,7 @@ public class NextLevel: NSObject {
     // audio configuration
     
     /// Indicates whether the capture session automatically changes settings in the app’s shared audio session. By default, is `true`.
-    public var automaticallyConfiguresApplicationAudioSession: Bool = true
+    public var automaticallyConfiguresApplicationAudioSession: Bool = false //changed to false for bluetooth support
     
     // camera configuration
     
@@ -306,10 +306,13 @@ public class NextLevel: NSObject {
     /// The current device position.
     public var devicePosition: NextLevelDevicePosition = .back {
         didSet {
-            self.executeClosureAsyncOnSessionQueueIfNecessary {
-                self.configureSessionDevices()
+            /// Queuing causes UI to get stuck when continuosly changing camera
+            // self.executeClosureAsyncOnSessionQueueIfNecessary {
+            self.configureSessionDevices()
+            if self.automaticallyUpdatesDeviceOrientation {
                 self.updateVideoOrientation()
             }
+            // }
         }
     }
     
@@ -928,6 +931,28 @@ extension NextLevel {
         }
     }
     
+    private func configureCameraPreset(for captureDevice: AVCaptureDevice) {
+        if let session = self._captureSession {
+            var preset = AVCaptureSession.Preset.high
+            
+            if captureDevice.supportsSessionPreset(self.videoConfiguration.preset) {
+                preset = self.videoConfiguration.preset
+            } else if (captureDevice.supportsSessionPreset(AVCaptureSession.Preset.hd4K3840x2160)) {
+                preset = .hd4K3840x2160
+            } else if (captureDevice.supportsSessionPreset(AVCaptureSession.Preset.hd1920x1080)) {
+                preset = .hd1920x1080
+            } else if (captureDevice.supportsSessionPreset(AVCaptureSession.Preset.hd1280x720)) {
+                preset = .hd1280x720
+            }
+            
+            if session.canSetSessionPreset(preset) {
+                session.sessionPreset = preset
+            } else {
+                print("NextLevel, could not set preset on session")
+            }
+        }
+    }
+    
     // inputs
     
     private func configureDevice(captureDevice: AVCaptureDevice, mediaType: AVMediaType) {
@@ -978,6 +1003,7 @@ extension NextLevel {
                 }
             }
             
+            self.configureCameraPreset(for: captureDevice)
             let _ = self.addInput(session: session, device: captureDevice)
         }
     }
@@ -1333,7 +1359,7 @@ extension NextLevel {
     internal func updateVideoOrientation() {
         if let session = self._recordingSession {
             if session.currentClipHasAudio == false && session.currentClipHasVideo == false {
-                session.reset()
+//                session.reset()
             }
         }
         

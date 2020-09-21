@@ -375,7 +375,14 @@ public class NextLevelAudioConfiguration: NextLevelConfiguration {
             return options
         }
         
-        var config: [String : Any] = [AVEncoderBitRateKey : NSNumber(integerLiteral: self.bitRate)]
+        /* ----- A Change By Wimansha ----
+         AVEncoderBitRateKey is removed from config dictionary.
+         Why?: AVAssetWriter's startWriting() fails if AVEncoderBitRateKey is on the config dic when taking audio input from bluetooth headset mic.
+         check NextLevel.swift -> setupWriter() method to find the place invoking "AVAssetWriter's startWriting()"
+         check this also : https://developer.apple.com/forums/thread/74256
+         */
+        //var config: [String : Any] = [AVEncoderBitRateKey : NSNumber(integerLiteral: self.bitRate)]
+        var config: [String : Any] = [String : Any]()
         
         if let sampleBuffer = sampleBuffer, let formatDescription: CMFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
             if let _ = self.sampleRate, let _ = self.channelsCount {
