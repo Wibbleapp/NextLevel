@@ -328,6 +328,9 @@ public class NextLevel: NSObject {
         }
     }
     
+    /// The force current orientation of the device for force changing video orientation
+    public var forcedDeviceOrientation: UIDeviceOrientation = .portrait
+    
     // stabilization
     
     /// When `true`, enables photo capture stabilization.
@@ -1365,7 +1368,7 @@ extension NextLevel {
         }
         
         var didChangeOrientation = false
-        let currentOrientation = AVCaptureVideoOrientation.avorientationFromUIDeviceOrientation(WIOrientationManager.shared.orientation)
+        let currentOrientation = AVCaptureVideoOrientation.avorientationFromUIDeviceOrientation(forcedDeviceOrientation)
         
         if let previewConnection = self.previewLayer.connection {
             if previewConnection.isVideoOrientationSupported && previewConnection.videoOrientation != currentOrientation {
