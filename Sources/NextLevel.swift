@@ -278,6 +278,7 @@ public class NextLevel: NSObject {
     // audio configuration
     
     /// Indicates whether the capture session automatically changes settings in the app’s shared audio session. By default, is `true`.
+    //----- A Change By Wimansha ----
     public var automaticallyConfiguresApplicationAudioSession: Bool = false //changed to false for bluetooth support
     
     // camera configuration
@@ -1364,7 +1365,7 @@ extension NextLevel {
         }
         
         var didChangeOrientation = false
-        let currentOrientation = AVCaptureVideoOrientation.avorientationFromUIDeviceOrientation(UIDevice.current.orientation)
+        let currentOrientation = AVCaptureVideoOrientation.avorientationFromUIDeviceOrientation(WIOrientationManager.shared.orientation)
         
         if let previewConnection = self.previewLayer.connection {
             if previewConnection.isVideoOrientationSupported && previewConnection.videoOrientation != currentOrientation {
