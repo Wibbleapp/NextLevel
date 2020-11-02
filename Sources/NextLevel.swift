@@ -445,8 +445,8 @@ public class NextLevel: NSObject {
     #endif
     internal var _metadataOutput: AVCaptureMetadataOutput?
     
-    private(set) var _currentDevice: AVCaptureDevice?
-    private(set) var _requestedDevice: AVCaptureDevice?
+    internal var _currentDevice: AVCaptureDevice?
+    internal var _requestedDevice: AVCaptureDevice?
     internal var _observers = [NSKeyValueObservation]()
     internal var _captureOutputObservers = [NSKeyValueObservation]()
     
@@ -1340,6 +1340,11 @@ extension NextLevel {
 // MARK: - capture device switching
 
 extension NextLevel {
+    
+    /// returns the current active capture device
+    public func getActiveCaptureDevice() -> AVCaptureDevice? {
+        return _currentDevice
+    }
     
     /// Triggers a camera device position change.
     public func flipCaptureDevicePosition() {
