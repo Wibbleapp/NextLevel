@@ -1328,7 +1328,9 @@ extension NextLevel {
     /// Starts the configured active session
     public func startConfiguredCaptureSession() {
         if _captureSession?.isRunning == false {
-            _captureSession?.startRunning()
+            DispatchQueue(label: "com.gcd.captureSessionStart").async {
+                self._captureSession?.startRunning()
+            }
         }
     }
 }
