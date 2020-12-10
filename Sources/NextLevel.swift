@@ -1322,7 +1322,9 @@ extension NextLevel {
     
     /// Stops the active capture session.
     public func stopconfiguredCaptureSession() {
-        _captureSession?.stopRunning()
+        self._sessionQueue.async {
+            self._captureSession?.stopRunning()
+        }
     }
     
     /// Starts the configured active session
