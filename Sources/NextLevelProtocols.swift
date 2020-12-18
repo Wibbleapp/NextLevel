@@ -58,6 +58,8 @@ public protocol NextLevelDelegate: AnyObject {
     
     // session
     func nextLevelSessionWillStart(_ nextLevel: NextLevel)
+    func nextLevelConfiguredSessionWillStart(_ nextLevel: NextLevel)
+    func nextLevelConfiguredSessionWillStop(_ nextLevel: NextLevel)
     func nextLevelSessionDidStart(_ nextLevel: NextLevel)
     func nextLevelSessionDidStop(_ nextLevel: NextLevel)
     
